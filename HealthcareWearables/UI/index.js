@@ -26,7 +26,7 @@ if (process.env.MOCK) {
     addMessage({
       contentdata: {
         label: 'Mocked user',
-        heart_rate: Math.floor(Math.random() * (156 - 72 + 1)) + 72
+        heart_rate: 72
       }
     })
   }, 2000)
