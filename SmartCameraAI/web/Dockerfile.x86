@@ -1,0 +1,11 @@
+FROM iofog/node-alpine-x86:8.16.0
+
+COPY . /src
+
+WORKDIR /src
+
+RUN npm install
+
+RUN mkdir -p static
+
+CMD ["npm", "start"]

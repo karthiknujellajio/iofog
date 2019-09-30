@@ -1,0 +1,42 @@
+user:
+  email: "user@domain.com"
+  password: "#Bugs4Fun"
+flow: "CameraOpenVINO"
+controller:
+  # HTTP(S) endpoint to reach the controller
+  address: "http://0.0.0.0:51121"
+microservices:
+  # Custom micro service that will use an Intel Neural Compute Stick 2 and a Raspberry Pi camera to do real-time AI
+  image-source:
+    agent-name: "ioFog Agent"
+    images:
+      arm: "edgeworx/openvino-camera-ai:version2"
+      x86: "edgeworx/openvino-camera-ai:version2"
+    microservice:
+      name: "openvino-camera-ai-source" # If you are happy with the default name, you don't need to edit.
+      root-host: true
+      ports: []
+      volumes:   
+        - hostDestination: "/dev"
+          containerDestination: "/dev"
+          accessMode: "rw"
+  # Simple web UI viewer for the object detection AI results
+  viewer:
+    agent-name: "ioFog Agent"
+    images:
+      arm: "edgeworx/iofog-video-web:armv7l"
+      x86: "edgeworx/iofog-video-web:x86"
+    microservice:
+      name: "ai-image-result-viewer" # If you are happy with the default name, you don't need to edit.
+      root-host: false
+      ports:
+        # The ui will be listening on port 80 (internal).
+        - external: 8080 # You will be able to access the ui on <AGENT_IP>:8080
+          internal: 80 # The ui is listening on port 80. Do not edit this.
+          publicMode: false # Do not edit this.
+      volumes: []
+routes:
+  # Use this section to configure route between microservices
+  # Use microservice name
+  - from: "openvino-camera-ai-source"
+    to: "ai-image-result-viewer"

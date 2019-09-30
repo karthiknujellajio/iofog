@@ -1,0 +1,22 @@
+ARG TAG_NAME=latest
+FROM edgeworx/iofog-opencv:${TAG_NAME}
+
+# Add CUDA to our path
+ENV PATH="/usr/local/cuda-9.0/bin:${PATH}"
+
+RUN apt-get update && apt-get install -y gcc-5 g++-5
+RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 100
+RUN update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 100
+
+# Build and compile Darknet
+RUN cd /opt && git clone https://github.com/AlexeyAB/darknet.git
+
+# Download pre built Yolo weights
+WORKDIR /opt/darknet
+RUN wget https://pjreddie.com/media/files/yolov3.weights
+
+ENV LD_LIBRARY_PATH="/usr/lib/aarch64-linux-gnu/gstreamer-1.0:/usr/lib/atlas-base/atlas:/usr/local/cuda-9.0/lib64:/usr/lib/aarch64-linux-gnu:/usr/lib/aarch64-linux-gnu/tegra:${LD_LIBRARY_PATH}"
+
+COPY make-darknet.sh make-darknet.sh
+
+ENTRYPOINT ["bash", "make-darknet.sh"]

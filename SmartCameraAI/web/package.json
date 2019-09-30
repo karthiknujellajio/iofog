@@ -1,0 +1,21 @@
+{
+  "name": "MessageWebServer",
+  "version": "1.0.0",
+  "description": "Receives messages and displays them as a web page.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Edgeworx/boulderAI.git"
+  },
+  "author": "Eclipse ioFog",
+  "license": "EPL-2.0",
+  "dependencies": {
+    "@iofog/nodejs-sdk": "0.0.x",
+    "express": "^4.17.0",
+    "hbs": "^4.0.4",
+    "lodash": "^4.17.11"
+  },
+  "scripts": {
+    "start": "node messageweb.js",
+    "dev": "PORT=5000 node messageweb.js"
+  }
+}

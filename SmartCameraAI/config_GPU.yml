@@ -1,0 +1,43 @@
+user:
+  email: "user@domain.com"
+  password: "#Bugs4Fun"
+flow: "ImageRecognitionFlow"
+controller:
+  address: "http://0.0.0.0:51121"
+microservices:
+  video:
+    agent-name: "ioFog Agent"
+    images:
+      arm: "edgeworx/iofog-video:aarch64_GPU"
+      x86: "edgeworx/iofog-video:x86_64_GPU"
+    microservice:
+      name: "iofog-video" # If you are happy with the default name, you don't need to edit.
+      root-host: true
+      ports: []
+      volumes: []
+      config:
+        configPath: "./cfg/yolov3.cfg"
+        weightPath:  "./yolov3.weights"
+        metaPath:  "./cfg/coco.data"
+        FPS: 60
+        threshold: 0.40
+        cameraSource: 0 # This will be opened as an OpenCV Capture. It supports all standard video stream protocols (RTMP, RTSP, etc.).
+  ui:
+    agent-name: "ioFog Agent"  # Both microservices may run on the same agent without any issue.
+    images:
+      arm: "edgeworx/iofog-video-web:aarch64"
+      x86: "edgeworx/iofog-video-web:x86_64"
+    microservice:
+      name: "iofog-video-ui" # If you are happy with the default name, you don't need to edit.
+      root-host: false
+      ports:
+        # The ui will be listening on port 80 (internal).
+        - external: 8080 # You will be able to access the ui on <AGENT_IP>:8080
+          internal: 80 # The ui is listening on port 80. Do not edit this.
+          publicMode: false # Do not edit this.
+      volumes: []
+routes:
+  # Use microservice name
+  - from: "iofog-video"
+    to: "iofog-video-ui"
+  

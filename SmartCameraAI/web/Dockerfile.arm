@@ -1,0 +1,11 @@
+FROM node:8-alpine
+
+COPY . /src
+
+WORKDIR /src
+
+RUN npm install
+
+RUN mkdir -p static
+
+CMD ["npm", "start"]

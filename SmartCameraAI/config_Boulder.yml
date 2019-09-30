@@ -1,0 +1,51 @@
+user:
+  email: "user@domain.com"
+  password: "S5gYVgLEZV"
+flow: "ImageRecognitionFlow"
+controller:
+  address: "http://34.94.175.176:51121"
+microservices:
+  video:
+    agent-name: "BoulderCam"
+    images:
+      arm: "edgeworx/iofog-video:aarch64_GPU"
+      x86: "edgeworx/iofog-video:x86_64_GPU"
+    microservice:
+      name: "iofog-video" # If you are happy with the default name, you don't need to edit.
+      root-host: true
+      ports: []
+      volumes:
+        - hostDestination: "/usr/local/cuda/lib64"
+          containerDestination: "/usr/local/cuda/lib64"
+          accessMode: "z"
+        - hostDestination: "/usr/lib/aarch64-linux-gnu/tegra"
+          containerDestination: "/usr/lib/aarch64-linux-gnu/tegra"
+          accessMode: "z"
+        - hostDestination: "/usr/local/cuda-9.0"
+          containerDestination: "/usr/local/cuda-9.0"
+          accessMode: "z"
+      config:
+        configPath: "./cfg/yolov3.cfg"
+        weightPath:  "./yolov3.weights"
+        metaPath:  "./cfg/coco.data"
+        FPS: 120
+        threshold: 0.40
+        cameraSource: "rtsp://localhost:8554/test"
+  ui:
+    agent-name: "BoulderCam"  # Both microservices may run on the same agent without any issue.
+    images:
+      arm: "edgeworx/iofog-video-web:aarch64"
+      x86: "edgeworx/iofog-video-web:x86_64"
+    microservice:
+      name: "iofog-video-ui" # If you are happy with the default name, you don't need to edit.
+      root-host: false
+      ports:
+        # The ui will be listening on port 80 (internal).
+        - external: 8080 # You will be able to access the ui on <AGENT_IP>:8080
+          internal: 80 # The ui is listening on port 80. Do not edit this.
+          publicMode: false # Do not edit this.
+      volumes: []
+routes:
+  # Use microservice name
+  - from: "iofog-video"
+    to: "iofog-video-ui"

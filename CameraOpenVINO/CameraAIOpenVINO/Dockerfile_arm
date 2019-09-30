@@ -1,0 +1,5 @@
+FROM iofog/raspbian-openvino-base-0.2:latest
+
+COPY . /k_build
+
+ENTRYPOINT ["/bin/bash", "-c", "source /opt/intel/openvino/bin/setupvars.sh && cd /k_build && python cameraai.py"]

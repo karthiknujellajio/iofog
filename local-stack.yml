@@ -1,0 +1,16 @@
+controllers:	
+- name: local-ecn
+  host: 127.0.0.1
+  iofoguser:
+    name: "test"
+    surname: "local"
+    email: "user@domain.com"
+    password: "#Bugs4Fun"
+  images:	
+    controller: "docker.io/iofog/controller:latest"
+    connector: "docker.io/iofog/connector:latest"
+agents:	
+- name: "ioFog Agent"
+  image: "docker.io/iofog/agent:latest"
+  host: 127.0.0.1
+microservices: []
