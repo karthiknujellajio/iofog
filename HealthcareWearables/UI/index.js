@@ -25,8 +25,8 @@ if (process.env.MOCK) {
   setInterval(() => {
     addMessage({
       contentdata: {
+        heart_rate: 78
         label: 'Mocked user',
-        heart_rate: 72
       }
     })
   }, 2000)
