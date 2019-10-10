@@ -1,0 +1,36 @@
+name: "ImageRecognition"
+microservices:
+  - name: iofog-video
+    agent:
+      name: "local-agent"
+    images:
+      arm: "edgeworx/iofog-video:aarch64"
+      x86: "edgeworx/iofog-video:x86_64"
+    roothostaccess: true
+    ports: []
+    volumes: []
+    config:
+      configPath: "./cfg/yolov3.cfg"
+      weightPath:  "./yolov3.weights"
+      metaPath:  "./cfg/coco.data"
+      FPS: 60
+      threshold: 0.40
+      cameraSource: "/opt/darknet/test_video_files/BBB.mp4" # This will be opened as an OpenCV Capture. It supports all standard video stream protocols (RTMP, RTSP, etc.).
+  - name: iofog-video-ui
+    agent:
+      name: "local-agent"  # Both microservices may run on the same agent without any issue.
+    images:
+      arm: "edgeworx/iofog-video-web:aarch64"
+      x86: "edgeworx/iofog-video-web:x86_64"
+    roothostaccess: false
+    ports:
+      # The ui will be listening on port 80 (internal).
+      - external: 8888 # You will be able to access the ui on <AGENT_IP>:8080
+        internal: 80 # The ui is listening on port 80. Do not edit this.
+        publicMode: false # Do not edit this.
+    volumes: []
+routes:
+  # Use microservice name
+  - from: "iofog-video"
+    to: "iofog-video-ui"
+  

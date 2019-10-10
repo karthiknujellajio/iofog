@@ -1,0 +1,53 @@
+VAGRANT_BOX = 'ubuntu/bionic64'
+VM_NAME = 'iofog-demo-sdk'
+VM_USER = 'vagrant'
+REG_USER='John'
+
+Vagrant.configure("2") do |config|
+  config.vm.box = VAGRANT_BOX
+  config.vm.hostname = VM_NAME
+  config.vm.provider "virtualbox" do |v|
+    v.name = VM_NAME
+    v.memory=2048
+  end
+  config.vm.network "private_network", type: "dhcp"
+  # Port forwarding for Controller
+  config.vm.network "forwarded_port", guest: 51121, host: 51121, autocorrect: true
+  # Port forwarding for Controller ECN-Viewer
+  config.vm.network "forwarded_port", guest: 8008, host: 8008, autocorrect: true
+  # Port forwarding for Connector
+  config.vm.network "forwarded_port", guest: 8080, host: 8080, autocorrect: true
+  # Port forwarding for Agent
+  config.vm.network "forwarded_port", guest: 54321, host: 54321, autocorrect: true
+  config.vm.network "forwarded_port", guest: 8081, host: 8081, autocorrect: true
+
+  # Port forwarding for Healthcarewearable UI
+  config.vm.network "forwarded_port", guest: 5000, host: 5000, autocorrect: true
+  # Port forwarding for Healthcarewearable UI
+  config.vm.network "forwarded_port", guest: 5000, host: 5000, autocorrect: true
+  # Port forwarding for OpenVINO UI
+  config.vm.network "forwarded_port", guest: 5005, host: 5005, autocorrect: true
+  # Port forwarding for SmartCameraAI UI
+  config.vm.network "forwarded_port", guest: 8888, host: 8888, autocorrect: true
+
+  config.vm.synced_folder "../", "$HOME/demo-sdk"
+  config.vm.provision "shell", inline: <<-SHELL
+    apt-get update
+    apt-get install -y git
+    curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+    apt-get install -y nodejs
+    apt-get install -y build-essential
+    npm install -g npm
+    apt-get install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+    apt-get update
+    apt-get install -y docker-ce docker-ce-cli containerd.io
+    sudo groupadd docker
+    sudo usermod -aG docker vagrant
+    curl https://packagecloud.io/install/repositories/iofog/iofogctl/script.deb.sh | bash
+    apt install iofogctl
+    apt-get autoremove -y
+  SHELL
+  
+end

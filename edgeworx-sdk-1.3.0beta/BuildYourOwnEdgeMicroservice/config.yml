@@ -1,0 +1,19 @@
+---
+name: BuildYourOwnEdgeMicroservice
+microservices:
+- name: BYOEM-UI
+  agent:
+    name: 'local-agent'
+    config: {}
+  images:
+    arm: byoem-ui
+    x86: byoem-ui
+    # For the purpose of the demo, the image is built locally and shared with the docker engine of the ioFog agent
+    # Registry local instructs the agent to look for a local image
+    # Registry remote instructs the agent to look for a public image to pull from dockerhub
+    registry: local
+  ports:
+  # The docker image starts the app in dev mode, which listen on port 3000.
+  # This forwards the docker container port 3000 to the host port 3000
+  - external: 3000
+    internal: 3000

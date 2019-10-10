@@ -1,0 +1,50 @@
+#
+# This is the root image that we will use to build the Darknet capable container.
+#
+FROM ubuntu:18.04
+
+# This is where we'll build opencv
+RUN mkdir -p /usr/src/iofog
+WORKDIR /usr/src/iofog
+
+# Automatically accept all questions
+ENV DEBIAN_FRONTEND noninteractive
+
+# Various Python and C/build deps
+RUN apt-get update && apt-get install -y \
+    wget \
+    build-essential \
+    libgstreamer1.0-dev \
+    libgstreamer-plugins-base1.0-dev \
+    libc-dev \
+    cmake \
+    git \
+    unzip \
+    pkg-config \
+    python-dev \
+    python-opencv \
+    libopencv-dev \
+    libjpeg-dev \
+    libpng-dev \
+    libtiff-dev \
+    libgtk2.0-dev \
+    python-numpy \
+    python-pycurl \
+    libatlas-base-dev \
+    gfortran \
+    webp \
+    qt5-default \
+    libvtk6-dev \
+    zlib1g-dev \
+    libncurses5-dev \
+    libgdbm-dev \
+    libnss3-dev \
+    libssl-dev \
+    libreadline-dev \
+    libffi-dev \
+    python3 \
+    python3-pip \
+    python-dev
+
+# Install our python deps
+RUN pip3 install numpy matplotlib opencv-python opencv-contrib-python

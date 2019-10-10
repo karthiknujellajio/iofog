@@ -1,0 +1,19 @@
+FROM balenalib/raspberrypi3-python:3.5-stretch-build
+
+ARG DOWNLOAD_LINK=https://download.01.org/opencv/2019/openvinotoolkit/l_openvino_toolkit_raspbi_p_2019.1.094.tgz
+ARG INSTALL_DIR=/opt/intel/openvino
+ARG TEMP_DIR=/tmp/openvino_installer
+
+RUN apt-get update && apt-get install -y --no-install-recommends lsb-release cmake libgtk-3-dev
+
+RUN mkdir -p $INSTALL_DIR && mkdir -p $TEMP_DIR && cd $TEMP_DIR && \
+    wget $DOWNLOAD_LINK && \
+    sudo tar -xf l_openvino_toolkit_raspbi_p_2019.1.094.tgz --strip 1 -C /opt/intel/openvino
+
+RUN sudo sed -i "s|<INSTALLDIR>|/opt/intel/openvino|" /opt/intel/openvino/bin/setupvars.sh
+RUN sudo sed -i "s|$(lsb_release -i -s)|'Raspbian'" /opt/intel/openvino/bin/setupvars.sh
+RUN sh /opt/intel/openvino/install_dependencies/install_NCS_udev_rules.sh
+
+RUN pip install numpy
+RUN pip install "picamera[array]"
+RUN pip install imutils
