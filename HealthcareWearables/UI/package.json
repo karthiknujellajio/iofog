@@ -7,7 +7,7 @@
   "dependencies": {
     "@iofog/nodejs-sdk": "0.0.x",
     "express": "^4.17.0",
-    "lodash": "^4.17.11"
+    "lodash": "^4.17.21"
   },
   "scripts": {
     "install-all": "npm i && cd client && npm i",
