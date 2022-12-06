@@ -9,8 +9,8 @@
   "author": "Eclipse ioFog",
   "license": "EPL-2.0",
   "dependencies": {
-    "@iofog/nodejs-sdk": "0.0.x",
-    "express": "^4.17.0",
+    "@iofog/nodejs-sdk": "3.0.x",
+    "express": "^4.18.2",
     "hbs": "^4.0.4",
     "lodash": "^4.17.11"
   },
